@@ -1,23 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-// import { Button, Container, FormControl, InputGroup } from 'react-bootstrap';
-// import { saveInLocalStorage } from '..';
+
+const MIN_PASS_LENGTH = 6;
+const EMAIL_REGEX = /\S+@\S+\.\S+/;
 
 function Login({ history }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [disabled, setDisabled] = useState(true);
 
-  function validate() {
-    const MIN_PASS_LENGTH = 6;
-    const emailFormat = /\S+@\S+\.\S+/;
-    const validEmail = emailFormat.test(email);
-    if (password.length >= MIN_PASS_LENGTH && validEmail) {
-      setDisabled(false);
-    } else {
-      setDisabled(true);
-    }
-  }
+  useEffect(() => {
+    const validEmail = EMAIL_REGEX.test(email);
+    const validPassword = password.length >= MIN_PASS_LENGTH;
+    const buttonEnabled = validEmail && validPassword;
+    setDisabled(!buttonEnabled);
+  }, [email, password]);
 
   function handleLogin() {
     localStorage.setItem('mealsToken', '1');
@@ -37,20 +34,14 @@ function Login({ history }) {
       <h1>LOGIN</h1>
       <form>
         <input
-          onChange={ ({ target }) => {
-            setEmail(target.value);
-            validate();
-          } }
+          onChange={ ({ target }) => setEmail(target.value) }
           placeholder="E-mail"
           type="email"
           value={ email }
           data-testid="common_login__input-email"
         />
         <input
-          onChange={ ({ target }) => {
-            setPassword(target.value);
-            validate();
-          } }
+          onChange={ ({ target }) => setPassword(target.value) }
           placeholder="Password"
           type="password"
           value={ password }
@@ -80,8 +71,8 @@ function Login({ history }) {
 
 Login.propTypes = {
   history: PropTypes.shape({
-    push: PropTypes.func,
-  }),
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 }.isRequired;
 
 export default Login;
