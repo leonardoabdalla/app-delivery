@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { saveInLocalStorage } from '../services/localStorage';
+import requestApi from '../services/ApiService';
 
 const MIN_PASS_LENGTH = 6;
 const EMAIL_REGEX = /\S+@\S+\.\S+/;
 
-function Login({ history }) {
+function Login() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [disabled, setDisabled] = useState(true);
+  const [messageError, setMessageError] = useState(false);
+  // const [credential, setCredential] = useState('');
 
   useEffect(() => {
     const validEmail = EMAIL_REGEX.test(email);
@@ -16,17 +22,32 @@ function Login({ history }) {
     setDisabled(!buttonEnabled);
   }, [email, password]);
 
-  function handleLogin() {
-    localStorage.setItem('mealsToken', '1');
-    saveInLocalStorage('mealsToken', 1);
-    saveInLocalStorage('cocktailsToken', 1);
-    saveInLocalStorage('user', { email });
-    history.push('/foods');
+  async function handleLogin(e) {
+    e.preventDefault();
+
+    console.log('teste');
+
+    try {
+      const data = await requestApi('localhost:3001/login', '', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      saveInLocalStorage('name', data.name);
+      saveInLocalStorage('email', data.email);
+      saveInLocalStorage('role', data.role);
+      saveInLocalStorage('token', data.token);
+      // setCredential(data);
+      navigate(`/${data.role}/products`);
+    } catch (error) {
+      console.log(error);
+      setMessageError(true);
+    }
   }
 
   function handleRegister() {
     // Levar para pagina de registro
-    history.push('/foods');
+    navigate('/register');
   }
 
   return (
@@ -51,7 +72,7 @@ function Login({ history }) {
           className="btn btn-success btn-block"
           data-testid="common_login__button-login"
           disabled={ disabled }
-          onClick={ () => handleLogin() }
+          onClick={ (e) => handleLogin(e) }
           type="button"
         >
           Login
@@ -64,6 +85,15 @@ function Login({ history }) {
         >
           Registrar
         </button>
+        {
+          messageError && (
+            <p
+              data-testid="common_login__element-invalid-email"
+            >
+              Credenciais inválidas
+            </p>
+          )
+        }
       </form>
     </div>
   );
