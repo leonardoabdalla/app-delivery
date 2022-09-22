@@ -1,12 +1,12 @@
 const createSales = (sequelize, DataTypes) => {
   const Sale = sequelize.define('Sale', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    userId: { type: DataTypes.INTEGER, foreignKey: true},
-    sellerId: { type: DataTypes.INTEGER, foreignKey: true},
+    userId: { type: DataTypes.INTEGER, foreignKey: true },
+    sellerId: { type: DataTypes.INTEGER, foreignKey: true },
     totalPrice: DataTypes.DECIMAL,
     deliveryAddress: DataTypes.STRING,
     deliveryNumber: DataTypes.STRING,
-    saleDate: DataTypes.DATE,
+    saleDate: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
     status: DataTypes.STRING,
   }, {
     tableName: 'sales',
