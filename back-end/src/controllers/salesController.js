@@ -1,4 +1,4 @@
-const productsService = require('../services/salesService');
+const salesService = require('../services/salesService');
 
 const salesController = {
   list: async (req, res) => {
@@ -6,8 +6,8 @@ const salesController = {
     const sale = await salesService.create({ userId, totalPrice, deliveryAddress, deliveryNumber });
     const productsUser = await salesService.getAllProducts(products, sale);
 
-    res.status(200).json(salesUser);
-  }
-}
+    res.status(200).json(productsUser);
+  },
+};
 
 module.exports = salesController;

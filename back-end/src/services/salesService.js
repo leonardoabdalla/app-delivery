@@ -5,9 +5,10 @@ const salesService = {
     // products: [...{product_id, quantity}]
     // salesUser: [...{id, userId, sellerId, totalPrice, deliveryAddress, deliveryNumber, saleDate, status}]
     // create salesProduct: { sale_id: id(salesUser), product_id, quantity}
-    await products.map((product) => {
-        db.SalesProduct.create(product + sale.id);
-    }); 
+    const renomearDepois = products.map(async (product) => {
+      await db.SalesProduct.create(product + sale.id);
+    });
+    return renomearDepois;
   },
 
   create: async ({ userId, totalPrice, deliveryAddress, deliveryNumber }) => {
