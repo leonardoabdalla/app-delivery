@@ -1,11 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
 import CartContext from '../context/CartContext';
 
 function ProductCard({ product, index }) {
-  const navigate = useNavigate();
-
   const { addToCart, removeFromCart } = useContext(CartContext);
 
   const [quantity, setQuantity] = useState(0);
@@ -18,10 +15,6 @@ function ProductCard({ product, index }) {
   const sub = () => {
     setQuantity(quantity - 1);
     removeFromCart(product.id);
-  };
-
-  const handleCard = () => {
-    navigate('/product');
   };
 
   const { name, price, urlImage } = product;
@@ -38,6 +31,7 @@ function ProductCard({ product, index }) {
         data-testid={ `customer_products__img-card-bg-image-${index}` }
         src={ urlImage }
         alt={ name }
+        width="50"
       />
       <div
         data-testid={ `customer_products__element-card-title-${index}` }

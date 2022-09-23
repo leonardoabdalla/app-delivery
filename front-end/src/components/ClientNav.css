@@ -1,29 +1,27 @@
 nav {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
   align-content: center;
-  justify-content: space-between;
   align-items: center;
+  background: #036b52;
+  display: flex;
+  flex-flow: row nowrap;
   height: 105px;
+  justify-content: space-between;
   left: 0%;
   right: 0%;
   top: 0.01px;
   width: 1920px;
-  background: #036B52;
 }
 
 .nav-itens {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-evenly;
   align-items: center;
-  width: 733px;
+  display: flex;
+  flex-flow: row nowrap;
   height: 105px;
+  justify-content: space-evenly;
   left: 0%;
   right: 80.89%;
-  top: 0px;
+  top: 0;
+  width: 733px;
 }
 
 .nav-itens div a {

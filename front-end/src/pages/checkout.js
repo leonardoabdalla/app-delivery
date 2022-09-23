@@ -89,7 +89,7 @@ function Checkout() {
               copyCartItems.map((order, index) => (
                 <tr key={ index + 1 }>
                   <CartCard
-                    index={ index + 1 }
+                    index={ index }
                     products={ order }
                     total={ totalPrice }
                   />
