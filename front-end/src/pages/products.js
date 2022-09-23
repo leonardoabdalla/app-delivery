@@ -1,11 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 // import './products.css';
+import { useNavigate } from 'react-router-dom';
 import requestApi from '../services/ApiService';
 import ClientNav from '../components/ClientNav';
 import ProductCard from '../components/productCard';
+import CartContext from '../context/CartContext';
 
 function Products() {
   const [productList, setProducts] = useState([]);
+  const { totalPrice } = useContext(CartContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,13 +26,19 @@ function Products() {
         {
           productList.map((product, index) => (
             <ProductCard
-              product={ product }
               key={ index }
-              index={ index }
+              product={ product }
             />
           ))
         }
       </div>
+      <button
+        type="button"
+        data-testid="customer_products__checkout-bottom-value"
+        onClick={ () => navigate('/customer/checkout') }
+      >
+        {`Ver carrinho: R$ ${totalPrice}`}
+      </button>
     </div>
   );
 }

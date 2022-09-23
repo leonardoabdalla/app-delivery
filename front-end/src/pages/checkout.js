@@ -87,7 +87,7 @@ function Checkout() {
           <tbody>
             {
               copyCartItems.map((order, index) => (
-                <tr key={ index + 1 }>
+                <tr key={ index }>
                   <CartCard
                     index={ index }
                     products={ order }
