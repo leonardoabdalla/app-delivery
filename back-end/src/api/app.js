@@ -11,7 +11,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use(express.static(process.cwd() + '/public'));
+app.use(express.static('public'));
 
 app.use('/login', authRouter);
 app.use('/users', userRouter);

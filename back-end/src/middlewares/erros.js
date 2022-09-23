@@ -7,7 +7,7 @@ const errorCodes = {
 
 const errors = (err, _req, res, _next) => {
   const { name, message } = err;
-  const code = errorCodes[name] ?? 500;
+  const code = errorCodes[name] || 500;
   
   if (code === 500) console.log(err);
   

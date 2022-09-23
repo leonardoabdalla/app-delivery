@@ -1,10 +1,21 @@
 const db = require('../database/models');
 
 const salesService = {
-
-  
-  createSale: async ({ sellerId, userId, totalPrice, deliveryAddress, deliveryNumber }) => {
-    const sale = await db.Sale.create({ sellerId, userId, totalPrice, deliveryAddress, deliveryNumber, status: 'Pendente' });
+  createSale: async ({
+    sellerId,
+    userId,
+    totalPrice,
+    deliveryAddress,
+    deliveryNumber,
+  }) => {
+    const sale = await db.Sale.create({
+      sellerId,
+      userId,
+      totalPrice,
+      deliveryAddress,
+      deliveryNumber,
+      status: 'Pendente',
+    });
     return sale;
   },
 
