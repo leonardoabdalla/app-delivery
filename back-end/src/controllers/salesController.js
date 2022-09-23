@@ -1,12 +1,15 @@
 const salesService = require('../services/salesService');
+const userService = require('../services/userService');
 
 const salesController = {
-  list: async (req, res) => {
-    const { userId, totalPrice, deliveryAddress, deliveryNumber, products } = req.body;
-    const sale = await salesService.create({ userId, totalPrice, deliveryAddress, deliveryNumber });
-    const productsUser = await salesService.getAllProducts(products, sale);
+  create: async (req, res) => {
+    const { userEmail, totalPrice, deliveryAddress, deliveryNumber, products, sellerName } = req.body;
+    const { id: sellerId } = await userService.getByName(sellerName);
+    const { id: userId } = await userService.getByEmail(userEmail);
+    const { id: saleId } = await salesService.createSale({ sellerId, userId, totalPrice, deliveryAddress, deliveryNumber });
+    await salesService.createSalesProduct(products, saleId);
 
-    res.status(200).json(productsUser);
+    res.status(201).json({ saleId });
   },
 };
 

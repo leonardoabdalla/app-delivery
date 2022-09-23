@@ -1,22 +1,17 @@
+const errorCodes = {
+  ValidationError: 400,
+  UnauthorizedError: 401,
+  NotFoundError: 404,
+  ConflictError: 409,
+};
+
 const errors = (err, _req, res, _next) => {
   const { name, message } = err;
-  switch (name) {
-    case 'ValidationError':
-      res.status(400).json({ message });
-      break;
-    case 'NotFoundError':
-      res.status(404).json({ message });
-      break;
-    case 'ConflictError':
-      res.status(409).json({ message });
-      break;
-    case 'UnauthorizedError':
-      res.status(401).json({ message });
-      break;
-    default:
-      res.status(500).json({ message });
-      break;
-  }
+  const code = errorCodes[name] ?? 500;
+  
+  if (code === 500) console.log(err);
+  
+  res.status(code).json({ message });
 };
 
 module.exports = errors;

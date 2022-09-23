@@ -1,19 +1,18 @@
 const db = require('../database/models');
 
 const salesService = {
-  getAllProducts: async (products, sale) => {
-    // products: [...{product_id, quantity}]
-    // salesUser: [...{id, userId, sellerId, totalPrice, deliveryAddress, deliveryNumber, saleDate, status}]
-    // create salesProduct: { sale_id: id(salesUser), product_id, quantity}
-    const renomearDepois = products.map(async (product) => {
-      await db.SalesProduct.create(product + sale.id);
-    });
-    return renomearDepois;
+
+  
+  createSale: async ({ sellerId, userId, totalPrice, deliveryAddress, deliveryNumber }) => {
+    const sale = await db.Sale.create({ sellerId, userId, totalPrice, deliveryAddress, deliveryNumber, status: 'Pendente' });
+    return sale;
   },
 
-  create: async ({ userId, totalPrice, deliveryAddress, deliveryNumber }) => {
-    const sales = await db.Sales.create({ userId, totalPrice, deliveryAddress, deliveryNumber });
-    return sales;
+  createSalesProduct: async (products, saleId) => {
+    products.map(async (product) => {
+      const { productId, quantity } = product;
+      await db.SalesProduct.create({ saleId, productId, quantity });
+    });
   },
 };
 

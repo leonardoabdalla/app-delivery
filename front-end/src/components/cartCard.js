@@ -1,9 +1,11 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
-function cartCard({ index, productName, quantity, unitPrice, subTotal }) {
+function CartCard({ index, products }) {
+  const { name, quantity, price } = products;
+
   return (
-    <tr>
+    <>
       <td
         data-testid={ `customer_checkout__element-order-table-item-number-${index}` }
       >
@@ -12,7 +14,7 @@ function cartCard({ index, productName, quantity, unitPrice, subTotal }) {
       <td
         data-testid={ `customer_checkout__element-order-table-name-${index}` }
       >
-        { productName }
+        { name }
       </td>
       <td
         data-testid={ `customer_checkout__element-order-table-quantity-${index}` }
@@ -22,21 +24,31 @@ function cartCard({ index, productName, quantity, unitPrice, subTotal }) {
       <td
         data-testid={ `customer_checkout__element-order-table-unit-price-${index}` }
       >
-        { unitPrice }
+        { price }
       </td>
       <td
         data-testid={ `customer_checkout__element-order-table-sub-total-${index}` }
       >
-        { subTotal }
+        { (quantity * price).toFixed(2) }
       </td>
-      <button
-        type="button"
-        data-testid={ `customer_checkout__element-order-table-remove-${index}` }
-      >
-        Remover
-      </button>
-    </tr>
+      <td>
+        <button
+          type="submit"
+          data-testid={ `customer_checkout__element-order-table-remove-${index}` }
+        >
+          Remover
+        </button>
+      </td>
+    </>
   );
 }
 
-export default cartCard;
+CartCard.propTypes = {
+  index: PropTypes.number,
+  productName: PropTypes.string,
+  quantity: PropTypes.string,
+  unitPrice: PropTypes.number,
+  subTotal: PropTypes.number,
+}.isRequired;
+
+export default CartCard;

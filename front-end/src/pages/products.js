@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+// import './products.css';
 import requestApi from '../services/ApiService';
 import ClientNav from '../components/ClientNav';
 import ProductCard from '../components/productCard';
@@ -17,13 +18,13 @@ function Products() {
   return (
     <div>
       <ClientNav />
-      <div>
+      <div className="products-list">
         {
-          productList.map((index, producto) => (
+          productList.map((product, index) => (
             <ProductCard
-              product={ producto }
+              product={ product }
               key={ index }
-              index
+              index={ index }
             />
           ))
         }

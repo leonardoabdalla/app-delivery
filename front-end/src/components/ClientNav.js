@@ -1,4 +1,5 @@
 import React from 'react';
+import './ClientNav.css';
 import { useNavigate, Link } from 'react-router-dom';
 import { readInLocalStorage, saveInLocalStorage } from '../services/localStorage';
 
@@ -12,31 +13,31 @@ function ClientNav() {
 
   return (
     <nav>
-      <ul className="nav-left">
-        <li>
+      <div className="nav-itens">
+        <div>
           <Link
             to="/customer/products"
             data-testid="customer_products__element-navbar-link-products"
           >
             Produtos
           </Link>
-        </li>
-        <li>
+        </div>
+        <div>
           <Link
             to="/customer/orders"
             data-testid="customer_products__element-navbar-link-orders"
           >
             Pedidos
           </Link>
-        </li>
-      </ul>
-      <ul className="nav-right">
-        <li>
+        </div>
+      </div>
+      <div className="nav-user">
+        <div>
           <span data-testid="customer_products__element-navbar-user-full-name">
             { readInLocalStorage('data').name }
           </span>
-        </li>
-        <li>
+        </div>
+        <div>
           <button
             type="button"
             onClick={ handleLogout }
@@ -44,8 +45,8 @@ function ClientNav() {
           >
             Sair
           </button>
-        </li>
-      </ul>
+        </div>
+      </div>
     </nav>
   );
 }

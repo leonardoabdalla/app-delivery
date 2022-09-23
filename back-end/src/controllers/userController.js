@@ -17,6 +17,12 @@ const userController = {
 
     res.status(201).json({ user });
   },
+
+  getAll: async (req, res) => {
+    const getAll = await userService.getAll();
+    res.status(200).json(getAll);
+  },
+
 };
 
 module.exports = userController;
