@@ -1,17 +1,15 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function ProductCard({ product, index }) {
   const navigate = useNavigate();
 
-  handleAdd = (e) => {
-    e.preventDefault();
-  };
+  const [quantidy, setQuantidy] = useState(0);
 
-  handleRm = (e) => {
-    e.preventDefault();
-  };
+  const add = () => setQuantidy(quantidy + 1);
+
+  const sub = () => setQuantidy(quantidy - 1);
 
   handleCard = () => {
     navigate('/product');
@@ -41,14 +39,20 @@ function ProductCard({ product, index }) {
       <button
         data-testid={ ` customer_products__button-card-add-item-${index}` }
         type="button"
-        onClick={ (e) => handleAdd(e) }
+        onClick={ add }
       >
         +
       </button>
+      <input
+        onChange={ ({ target }) => setQuantidy(target.value) }
+        type="number"
+        value={ quantidy }
+        data-testid={ `customer_products__input-card-quantity-${index}` }
+      />
       <button
         data-testid={ `customer_products__button-card-rm-item-${index}` }
         type="button"
-        onClick={ (e) => handleRm(e) }
+        onClick={ sub }
       >
         -
       </button>
