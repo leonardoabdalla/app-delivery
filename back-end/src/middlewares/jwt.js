@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
 
-const JWT_SECRET = 'secret_key'; // fs.readFileSync('../../jwt.evaluation.key', { encoding: 'utf-8' });
+const JWT_SECRET = fs.readFileSync('./jwt.evaluation.key', { encoding: 'utf-8' });
+console.log(JWT_SECRET);
 
 const jwtService = {
   createToken: (data) => {

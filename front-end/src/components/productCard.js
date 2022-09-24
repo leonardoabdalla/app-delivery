@@ -13,8 +13,10 @@ function ProductCard({ product }) {
   };
 
   const sub = () => {
-    if (quantity > 0) setQuantity(quantity - 1);
-    removeFromCart(product.id);
+    if (quantity > 0) {
+      setQuantity(quantity - 1);
+      removeFromCart(product.id);
+    }
   };
 
   const { name, price, urlImage } = product;
@@ -53,7 +55,7 @@ function ProductCard({ product }) {
         data-testid={ `customer_products__input-card-quantity-${product.id}` }
       />
       <button
-        data-testid={ ` customer_products__button-card-add-item-${product.id}` }
+        data-testid={ `customer_products__button-card-add-item-${product.id}` }
         type="button"
         onClick={ add }
       >
