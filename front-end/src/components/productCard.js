@@ -13,7 +13,7 @@ function ProductCard({ product }) {
   };
 
   const sub = () => {
-    setQuantity(quantity - 1);
+    if (quantity > 0) setQuantity(quantity - 1);
     removeFromCart(product.id);
   };
 
