@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
+import CartContext from '../context/CartContext';
 
 function CartCard({ index, products }) {
-  const { name, quantity, price } = products;
+  const { removeFromCart } = useContext(CartContext);
+  const { id, name, quantity, price } = products;
 
   return (
     <>
@@ -24,17 +26,19 @@ function CartCard({ index, products }) {
       <td
         data-testid={ `customer_checkout__element-order-table-unit-price-${index}` }
       >
-        { price }
+        { price.replace('.', ',') }
       </td>
       <td
         data-testid={ `customer_checkout__element-order-table-sub-total-${index}` }
       >
-        { (quantity * price).toFixed(2) }
+        { Number(quantity * price).toFixed(2).replace('.', ',') }
       </td>
       <td>
         <button
           type="submit"
+          value={ index }
           data-testid={ `customer_checkout__element-order-table-remove-${index}` }
+          onClick={ () => removeFromCart(id) }
         >
           Remover
         </button>

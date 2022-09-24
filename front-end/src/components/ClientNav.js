@@ -1,13 +1,13 @@
 import React from 'react';
 import './ClientNav.css';
 import { useNavigate, Link } from 'react-router-dom';
-import { readInLocalStorage, saveInLocalStorage } from '../services/localStorage';
+import { readInLocalStorage, removeInLocalStorage } from '../services/localStorage';
 
 function ClientNav() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    saveInLocalStorage('data', null);
+    removeInLocalStorage('user');
     navigate('/login');
   };
 
@@ -34,7 +34,7 @@ function ClientNav() {
       <div className="nav-user">
         <div>
           <span data-testid="customer_products__element-navbar-user-full-name">
-            { readInLocalStorage('data').name }
+            { readInLocalStorage('user').name }
           </span>
         </div>
         <div>

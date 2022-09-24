@@ -24,15 +24,13 @@ function Login() {
   async function handleLogin(e) {
     e.preventDefault();
 
-    console.log('teste');
-
     try {
       const data = await requestApi('localhost:3001/login', '', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
-      saveInLocalStorage('data', data);
+      saveInLocalStorage('user', data);
       let nav = '';
       if (data.role === 'customer') {
         nav = '/customer/products';

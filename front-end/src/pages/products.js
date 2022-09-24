@@ -37,7 +37,7 @@ function Products() {
         data-testid="customer_products__checkout-bottom-value"
         onClick={ () => navigate('/customer/checkout') }
       >
-        {`Ver carrinho: R$ ${totalPrice}`}
+        {`${totalPrice.toFixed(2).replace('.', ',')}`}
       </button>
     </div>
   );

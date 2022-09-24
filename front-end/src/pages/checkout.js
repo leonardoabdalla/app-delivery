@@ -8,8 +8,6 @@ import { readInLocalStorage } from '../services/localStorage';
 function Checkout() {
   const navigate = useNavigate();
   const { cartItems } = useContext(CartContext);
-  const [copyCartItems, setCopyCartItems] = useState([]);
-  const [totalPrice, setTotalPrice] = useState(0);
   const [sellerName, setSellerName] = useState('');
   const [deliveryAddress, setDeliveryAddress] = useState('');
   const [deliveryNumber, setDeliveryNumber] = useState('');
@@ -17,57 +15,40 @@ function Checkout() {
 
   useEffect(() => {
     const getData = () => {
-      const data = readInLocalStorage('data');
+      const data = readInLocalStorage('user');
       setUser(data);
     };
     getData();
   }, []);
 
-  useEffect(() => {
-    let total = 0;
-    const attCartItems = () => {
-      cartItems.forEach((e) => {
-        total += e.quantity * e.price;
-      });
-      setCopyCartItems(cartItems);
-    };
-    attCartItems();
-    setTotalPrice(total);
-  }, [cartItems]);
+  let total = 0;
+  cartItems.forEach((e) => {
+    total += e.quantity * e.price;
+  });
 
   const arr = [
     'Item', 'Descrição', 'Quantidade',
     'Valor Unitário', 'Sub-total', 'Remover Item',
   ];
 
-  // ignorar (constantes de teste)
-  // const list = [
-  //   { productId: 4, name: 'sasa', quantity: 1, unitPrice: 2, subTotal: 2 },
-  //   { productId: 5, name: 'sdsdsda', quantity: 2, unitPrice: 3, subTotal: 6 },
-  //   { productId: 8, name: 'stytytyt', quantity: 3, unitPrice: 4, subTotal: 12 },
-  // ];
-
   const sale = {
     sellerName,
-    userEmail: user.email, // localStorage
-    totalPrice,
+    userEmail: user.email,
+    totalPrice: total,
     deliveryAddress,
     deliveryNumber,
-    products: copyCartItems,
+    products: cartItems,
   };
 
   async function handleOrder(e) {
     e.preventDefault();
 
-    const data = await requestApi('localhost:3001/sales', '', {
+    const { saleId } = await requestApi('localhost:3001/sales', '', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: user.token,
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(sale),
     });
-    navigate(`/customer/orders/${data.saleId}`);
+    navigate(`/customer/orders/${saleId}`);
   }
 
   return (
@@ -86,12 +67,12 @@ function Checkout() {
           </thead>
           <tbody>
             {
-              copyCartItems.map((order, index) => (
+              cartItems.map((order, index) => (
                 <tr key={ index }>
                   <CartCard
                     index={ index }
                     products={ order }
-                    total={ totalPrice }
+                    total={ total }
                   />
                 </tr>
               ))
@@ -101,7 +82,7 @@ function Checkout() {
         <p
           data-testid="customer_checkout__element-order-total-price"
         >
-          {`Total: R$ ${totalPrice.toFixed(2)}`}
+          {`Total: R$ ${total.toFixed(2).replace('.', ',')}`}
         </p>
       </div>
       <div>
