@@ -8,6 +8,7 @@ import CartContext from '../context/CartContext';
 
 function Products() {
   const [productList, setProducts] = useState([]);
+  const [cartDisabled, setCartDisabled] = useState(true);
   const { totalPrice } = useContext(CartContext);
   const navigate = useNavigate();
 
@@ -18,6 +19,10 @@ function Products() {
     };
     fetchData();
   }, []);
+
+  useEffect(() => {
+    setCartDisabled(totalPrice === 0);
+  }, [totalPrice]);
 
   return (
     <div>
@@ -34,10 +39,14 @@ function Products() {
       </div>
       <button
         type="button"
-        data-testid="customer_products__checkout-bottom-value"
+        data-testid="customer_products__button-cart"
+        disabled={ cartDisabled }
         onClick={ () => navigate('/customer/checkout') }
       >
-        {`${totalPrice.toFixed(2).replace('.', ',')}`}
+        <span>Ver carrinho</span>
+        <span data-testid="customer_products__checkout-bottom-value">
+          {`${totalPrice.toFixed(2).replace('.', ',')}`}
+        </span>
       </button>
     </div>
   );
