@@ -1,11 +1,19 @@
 import PropTypes from 'prop-types';
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import CartContext from '../context/CartContext';
 
 function ProductCard({ product }) {
-  const { addToCart, removeFromCart } = useContext(CartContext);
+  const { cartItems, addToCart, removeFromCart, setToCart } = useContext(CartContext);
 
   const [quantity, setQuantity] = useState(0);
+
+  useEffect(() => {
+    const getCart = () => {
+      const prod = cartItems.find((e) => e.id === product.id);
+      setQuantity(prod ? prod.quantity : 0);
+    };
+    getCart();
+  }, []);
 
   const add = () => {
     setQuantity(quantity + 1);
@@ -17,6 +25,12 @@ function ProductCard({ product }) {
       setQuantity(quantity - 1);
       removeFromCart(product);
     }
+  };
+
+  const handleInput = ({ target }) => {
+    const value = Number.isNaN(Number(target.value)) ? 0 : target.value;
+    setQuantity(value);
+    setToCart(product, value);
   };
 
   const { name, price, urlImage } = product;
@@ -49,8 +63,9 @@ function ProductCard({ product }) {
         -
       </button>
       <input
-        onChange={ ({ target }) => setQuantity(target.value) }
+        onChange={ handleInput }
         type="number"
+        min="0"
         value={ quantity }
         data-testid={ `customer_products__input-card-quantity-${product.id}` }
       />
