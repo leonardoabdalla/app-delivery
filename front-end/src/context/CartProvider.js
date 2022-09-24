@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { readInLocalStorage, saveInLocalStorage } from '../services/localStorage';
 import CartContext from './CartContext';
 
+const NO_INDEX = -1;
+
 function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -19,43 +21,31 @@ function CartProvider({ children }) {
     setTotalPrice(total);
   }, [cartItems]);
 
-  const addToCart = (product, quantity = 1) => {
+  // uso: setToCart(produto, quantidade);
+  const setToCart = (product, quantity = 0, relative = false) => {
     let result = null;
     const itemIndex = cartItems.findIndex((elem) => elem.id === product.id);
     const item = cartItems[itemIndex];
 
-    if (!item) {
-      result = [...cartItems, { ...product, quantity }];
+    const newItem = {
+      ...product,
+      quantity: (relative && item) ? item.quantity + quantity : quantity,
+    };
+
+    if (newItem.quantity <= 0) {
+      result = cartItems.filter((elem) => elem.id !== product.id);
     } else {
-      result = [
-        ...cartItems.slice(0, itemIndex),
-        { ...item, quantity: item.quantity + quantity },
-        ...cartItems.slice(itemIndex + 1),
-      ];
+      result = [...cartItems];
+      const newItemIndex = itemIndex === NO_INDEX ? result.length : itemIndex;
+      result.splice(newItemIndex, 1, newItem);
     }
 
     saveInLocalStorage('cart', result);
     setCartItems(result);
   };
 
-  const removeFromCart = (id, quantity = 1) => {
-    let result = null;
-    const itemIndex = cartItems.findIndex((elem) => elem.id === id);
-    const item = cartItems[itemIndex];
-
-    if (item.quantity <= quantity) {
-      result = cartItems.filter((elem) => elem.id !== id);
-    } else {
-      result = [
-        ...cartItems.slice(0, itemIndex),
-        { ...item, quantity: item.quantity - quantity },
-        ...cartItems.slice(itemIndex + 1),
-      ];
-    }
-
-    saveInLocalStorage('cart', result);
-    setCartItems(result);
-  };
+  const addToCart = (product, quantity = 1) => setToCart(product, quantity, true);
+  const removeFromCart = (product, quantity = 1) => setToCart(product, -quantity, true);
 
   const { Provider } = CartContext;
 
@@ -66,6 +56,7 @@ function CartProvider({ children }) {
         totalPrice,
         addToCart,
         removeFromCart,
+        setToCart,
       } }
     >
       { children }
