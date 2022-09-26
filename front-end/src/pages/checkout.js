@@ -3,12 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import CartCard from '../components/cartCard';
 import CartContext from '../context/CartContext';
 import requestApi from '../services/ApiService';
-import { readInLocalStorage } from '../services/localStorage';
+import { readInLocalStorage, removeInLocalStorage } from '../services/localStorage';
 
 function Checkout() {
   const navigate = useNavigate();
   const { cartItems } = useContext(CartContext);
-  const [sellerName, setSellerName] = useState('');
+  const [sellers, setSellers] = useState([]);
+  const [sellerName, setSellerName] = useState('Fulana Pereira');
   const [deliveryAddress, setDeliveryAddress] = useState('');
   const [deliveryNumber, setDeliveryNumber] = useState('');
   const [user, setUser] = useState({});
@@ -18,7 +19,13 @@ function Checkout() {
       const data = readInLocalStorage('user');
       setUser(data);
     };
+    const getSellers = async () => {
+      const allUsersApp = await requestApi('localhost:3001/users', '');
+      const allSellers = allUsersApp.filter(({ role }) => role === 'seller');
+      setSellers(allSellers);
+    };
     getData();
+    getSellers();
   }, []);
 
   let total = 0;
@@ -40,7 +47,7 @@ function Checkout() {
     products: cartItems,
   };
 
-  async function handleOrder(e) {
+  const handleOrder = async (e) => {
     e.preventDefault();
 
     const { saleId } = await requestApi('localhost:3001/sales', '', {
@@ -48,8 +55,10 @@ function Checkout() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(sale),
     });
+
+    removeInLocalStorage('cart');
     navigate(`/customer/orders/${saleId}`);
-  }
+  };
 
   return (
     <div>
@@ -72,7 +81,6 @@ function Checkout() {
                   <CartCard
                     index={ index }
                     products={ order }
-                    total={ total }
                   />
                 </tr>
               ))
@@ -88,22 +96,24 @@ function Checkout() {
       <div>
         <h1> Detalhes e Endereço para Entrega </h1>
         <form>
-          <label htmlFor="seller">
-            Vendedor Responsável
-            <input
-              onChange={ ({ target }) => setSellerName(target.value) }
-              id="seller"
-              placeholder="Kakaka da Silva"
-              type="text"
-              value={ sellerName }
-              data-testid="customer_checkout__select-seller"
-            />
-          </label>
+          Vendedor Responsável
+          <select
+            onChange={ ({ target }) => setSellerName(target.value) }
+            name="seller"
+            type="text"
+            value={ sellerName }
+            data-testid="customer_checkout__select-seller"
+          >
+            {
+              sellers.map(({ name }, index) => (
+                <option key={ index } value={ name }>{name}</option>
+              ))
+            }
+          </select>
           <label htmlFor="address">
             Endereço
             <input
               onChange={ ({ target }) => setDeliveryAddress(target.value) }
-              placeholder="Rua Lalalala"
               type="text"
               value={ deliveryAddress }
               data-testid="customer_checkout__input-address"
@@ -114,7 +124,6 @@ function Checkout() {
             <input
               onChange={ ({ target }) => setDeliveryNumber(target.value) }
               id="address-number"
-              placeholder="123"
               type="text"
               value={ deliveryNumber }
               data-testid="customer_checkout__input-address-number"

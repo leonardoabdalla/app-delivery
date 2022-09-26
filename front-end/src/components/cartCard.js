@@ -4,14 +4,14 @@ import CartContext from '../context/CartContext';
 
 function CartCard({ index, products }) {
   const { removeFromCart } = useContext(CartContext);
-  const { id, name, quantity, price } = products;
+  const { name, quantity, price } = products;
 
   return (
     <>
       <td
         data-testid={ `customer_checkout__element-order-table-item-number-${index}` }
       >
-        { index }
+        { index + 1 }
       </td>
       <td
         data-testid={ `customer_checkout__element-order-table-name-${index}` }
@@ -21,7 +21,7 @@ function CartCard({ index, products }) {
       <td
         data-testid={ `customer_checkout__element-order-table-quantity-${index}` }
       >
-        { quantity}
+        { quantity }
       </td>
       <td
         data-testid={ `customer_checkout__element-order-table-unit-price-${index}` }
@@ -33,12 +33,10 @@ function CartCard({ index, products }) {
       >
         { Number(quantity * price).toFixed(2).replace('.', ',') }
       </td>
-      <td>
+      <td data-testid={ `customer_checkout__element-order-table-remove-${index}` }>
         <button
           type="submit"
-          value={ index }
-          data-testid={ `customer_checkout__element-order-table-remove-${index}` }
-          onClick={ () => removeFromCart(id) }
+          onClick={ () => removeFromCart(products, quantity) }
         >
           Remover
         </button>
