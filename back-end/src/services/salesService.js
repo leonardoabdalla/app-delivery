@@ -21,8 +21,8 @@ const salesService = {
 
   createSalesProduct: async (products, saleId) => {
     products.map(async (product) => {
-      const { productId, quantity } = product;
-      await db.SalesProduct.create({ saleId, productId, quantity });
+      const { id, quantity } = product;
+      await db.SalesProduct.create({ saleId, productId: id, quantity }); 
     });
   },
 };

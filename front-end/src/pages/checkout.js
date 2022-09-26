@@ -9,7 +9,7 @@ function Checkout() {
   const navigate = useNavigate();
   const { cartItems } = useContext(CartContext);
   const [sellers, setSellers] = useState([]);
-  const [sellerName, setSellerName] = useState('Fulana Pereira');
+  const [sellerId, setSellerId] = useState(2);
   const [deliveryAddress, setDeliveryAddress] = useState('');
   const [deliveryNumber, setDeliveryNumber] = useState('');
   const [user, setUser] = useState({});
@@ -39,7 +39,7 @@ function Checkout() {
   ];
 
   const sale = {
-    sellerName,
+    sellerId,
     userEmail: user.email,
     totalPrice: total,
     deliveryAddress,
@@ -52,7 +52,10 @@ function Checkout() {
 
     const { saleId } = await requestApi('localhost:3001/sales', '', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: user.token,
+      },
       body: JSON.stringify(sale),
     });
 
@@ -98,15 +101,14 @@ function Checkout() {
         <form>
           Vendedor Responsável
           <select
-            onChange={ ({ target }) => setSellerName(target.value) }
+            onChange={ ({ target }) => setSellerId(target.value) }
             name="seller"
-            type="text"
-            value={ sellerName }
+            value={ sellerId }
             data-testid="customer_checkout__select-seller"
           >
             {
-              sellers.map(({ name }, index) => (
-                <option key={ index } value={ name }>{name}</option>
+              sellers.map(({ name, id }) => (
+                <option key={ id } value={ id }>{name}</option>
               ))
             }
           </select>

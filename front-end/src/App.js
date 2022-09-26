@@ -1,4 +1,5 @@
 import React from 'react';
+// import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import { Navigate, Routes, Route } from 'react-router-dom';
 import Login from './pages/login';

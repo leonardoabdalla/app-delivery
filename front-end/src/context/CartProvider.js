@@ -29,7 +29,7 @@ function CartProvider({ children }) {
 
     const newItem = {
       ...product,
-      quantity: (relative && item) ? item.quantity + quantity : quantity,
+      quantity: (relative && item) ? item.quantity + Number(quantity) : Number(quantity),
     };
 
     if (newItem.quantity <= 0) {
