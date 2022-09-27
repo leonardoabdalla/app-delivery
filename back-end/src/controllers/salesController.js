@@ -1,5 +1,4 @@
 const salesService = require('../services/salesService');
-const userService = require('../services/userService');
 
 const salesController = {
   create: async (req, res) => {
