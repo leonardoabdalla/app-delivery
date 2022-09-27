@@ -20,7 +20,7 @@ function Checkout() {
       setUser(data);
     };
     const getSellers = async () => {
-      const allUsersApp = await requestApi('localhost:3001/users', '');
+      const allUsersApp = await requestApi('/users');
       const allSellers = allUsersApp.filter(({ role }) => role === 'seller');
       setSellers(allSellers);
     };
@@ -50,14 +50,7 @@ function Checkout() {
   const handleOrder = async (e) => {
     e.preventDefault();
 
-    const { saleId } = await requestApi('localhost:3001/sales', '', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: user.token,
-      },
-      body: JSON.stringify(sale),
-    });
+    const { saleId } = await requestApi('/sales', 'POST', JSON.stringify(sale));
 
     removeInLocalStorage('cart');
     navigate(`/customer/orders/${saleId}`);

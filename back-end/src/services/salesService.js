@@ -31,8 +31,13 @@ const salesService = {
     return sales;
   },
 
-  getByUserId: async (id) => {
-    const sales = await db.Sale.findAll({ userId: id });
+  getByCustomer: async (id) => {
+    const sales = await db.Sale.findAll({ where: { userId: id } });
+    return sales;
+  },
+
+  getBySeller: async (id) => {
+    const sales = await db.Sale.findAll({ where: { sellerId: id } });
     return sales;
   },
 

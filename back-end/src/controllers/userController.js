@@ -1,12 +1,11 @@
 const crypto = require('crypto');
 const userService = require('../services/userService');
-// const jwt = require('../middlewares/jwt');
+const jwt = require('../middlewares/jwt');
 
 const userController = {
   createUser: async (req, res) => {
     const { name, email, password, role } = userService.validateCreateUser(req.body);
     const hashed = crypto.createHash('md5').update(password).digest('hex');
-    // const token = await jwt.createToken({ email });
 
     const user = await userService.createUser({
       name,
@@ -15,7 +14,9 @@ const userController = {
       role,
     });
 
-    res.status(201).json({ user });
+    const token = jwt.createToken(user);
+
+    res.status(201).json({ name, email, role, token });
   },
 
   getAll: async (req, res) => {

@@ -1,6 +1,5 @@
 const Joi = require('joi');
 const db = require('../database/models');
-// const jwtService = require('../middlewares/jwt');
 
 const userService = {
   validateCreateUser: (body) => {

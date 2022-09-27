@@ -23,8 +23,10 @@ const jwtService = {
     next();
   },
 
-  // roles = ['customer', 'seller', 'administrator']
-  validateToken: (roles = []) => (req, _res, next) => {
+  /**
+    @param {('customer'|'seller'|'administrator')[]} roles
+  */
+  validateToken: (...roles) => (req, _res, next) => {
     if (!Object.keys(req.user).length) {
       const erro = new Error('Expired or invalid token');
       erro.name = 'UnauthorizedError';

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 import CartCard from '../components/cartCard';
-import ClientNav from '../components/ClientNav';
 import formatDate from '../helpers/formatDate';
 import requestApi from '../services/ApiService';
+import ClientNav from '../components/ClientNav';
 
-function SaleDetail() {
+function SaleDetail({ user }) {
   const { id } = useParams();
   const [sale, setSale] = useState([]);
   const [seller, setSeller] = useState();
@@ -15,7 +16,7 @@ function SaleDetail() {
 
   useEffect(() => {
     const findSale = async () => {
-      const temp = await requestApi(`localhost:3001/sales/${id}`, '');
+      const temp = await requestApi(`/sales/${id}`);
       setTotalPrice(temp.totalPrice);
       setSale(temp.products);
       setSeller(temp.seller.name);
@@ -36,7 +37,7 @@ function SaleDetail() {
 
   return (
     <div>
-      <ClientNav />
+      <ClientNav page={ user } />
       <h1>
         Detalhes do Pedido
       </h1>
@@ -96,6 +97,7 @@ function SaleDetail() {
                   index={ index }
                   products={ order }
                   page="order_details"
+                  user="customer"
                 />
               </tr>
             ))
@@ -115,5 +117,9 @@ function SaleDetail() {
     </div>
   );
 }
+
+SaleDetail.propTypes = {
+  user: PropTypes.string,
+}.isRequired;
 
 export default SaleDetail;

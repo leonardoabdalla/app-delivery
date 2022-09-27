@@ -1,22 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import ClientNav from '../components/ClientNav';
 import OrderCard from '../components/orderCard';
 import requestApi from '../services/ApiService';
-import { readInLocalStorage } from '../services/localStorage';
 import '../components/orderCard.css';
 
-function Orders() {
+function Orders({ user }) {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
     const getData = async () => {
-      const info = readInLocalStorage('user');
-      const data = await requestApi('localhost:3001/sales/user', '', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: info.email }),
-      });
+      const data = await requestApi('/sales');
       setOrders(data);
     };
     getData();
@@ -24,9 +19,9 @@ function Orders() {
 
   return (
     <>
-      <ClientNav />
+      <ClientNav page={ user } />
       <div className="order__element-card">
-        { // CONFERIR NOMES DAS CHAVES
+        {
           orders.map((order) => (
             <OrderCard
               key={ order.id }
@@ -34,6 +29,9 @@ function Orders() {
               status={ order.status }
               date={ order.saleDate }
               price={ order.totalPrice }
+              address={ order.deliveryAddress }
+              addressNumber={ order.deliveryNumber }
+              user={ user }
             />
           ))
         }
@@ -41,5 +39,9 @@ function Orders() {
     </>
   );
 }
+
+Orders.propTypes = {
+  user: PropTypes.string,
+}.isRequired;
 
 export default Orders;
