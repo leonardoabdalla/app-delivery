@@ -1,0 +1,22 @@
+.order__element-card {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.order-card__element-button {
+  align-items: center;
+  display: flex;
+  height: 100px;
+  justify-content: space-around;
+  margin: 15px;
+  width: 350px;
+}
+
+.order-card__element-date {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-evenly;
+}
+

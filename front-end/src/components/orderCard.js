@@ -17,15 +17,20 @@ function OrderCard({ id, status, date, price }) {
     <button
       type="submit"
       onClick={ () => navigate(`/customer/orders/${id}`) }
+      className="order-card__element-button"
     >
       <section>
-        <span>Pedido</span>
+        <span>Pedido </span>
         <span data-testid={ dataTestId.id }>{id}</span>
       </section>
       <section data-testid={ dataTestId.status }>{status}</section>
-      <section>
-        <span data-testid={ dataTestId.date }>{formatDate(date)}</span>
-        <span data-testid={ dataTestId.price }>{price}</span>
+      <section className="order-card__element-date">
+        <span data-testid={ dataTestId.date }>{formatDate(date).replace('.', ',')}</span>
+        <span data-testid={ dataTestId.price }>
+          R$
+          {' '}
+          {price.replace('.', ',')}
+        </span>
       </section>
     </button>
   );

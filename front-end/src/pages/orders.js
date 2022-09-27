@@ -4,6 +4,7 @@ import ClientNav from '../components/ClientNav';
 import OrderCard from '../components/orderCard';
 import requestApi from '../services/ApiService';
 import { readInLocalStorage } from '../services/localStorage';
+import '../components/orderCard.css';
 
 function Orders() {
   const [orders, setOrders] = useState([]);
@@ -22,20 +23,22 @@ function Orders() {
   }, []);
 
   return (
-    <div>
+    <>
       <ClientNav />
-      { // CONFERIR NOMES DAS CHAVES
-        orders.map((order) => (
-          <OrderCard
-            key={ order.id }
-            id={ order.id }
-            status={ order.status }
-            date={ order.saleDate }
-            price={ order.totalPrice }
-          />
-        ))
-      }
-    </div>
+      <div className="order__element-card">
+        { // CONFERIR NOMES DAS CHAVES
+          orders.map((order) => (
+            <OrderCard
+              key={ order.id }
+              id={ order.id }
+              status={ order.status }
+              date={ order.saleDate }
+              price={ order.totalPrice }
+            />
+          ))
+        }
+      </div>
+    </>
   );
 }
 
