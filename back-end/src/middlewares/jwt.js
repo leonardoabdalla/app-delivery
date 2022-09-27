@@ -17,7 +17,9 @@ const jwtService = {
     try {
       const user = jwt.verify(authorization, JWT_SECRET);
       req.user = user;
-    } catch {}
+    } catch (error) {
+      console.error(error);
+    }
 
     next();
   },

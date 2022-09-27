@@ -64,7 +64,7 @@ describe(requirement(22), () => {
       await expect(page).toFindElement(
         customerOrdersPage.element.card.price + `[data-testid$='-${id}']`
       );
-    }git 
+    } 
   });
 });
 
