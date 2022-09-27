@@ -33,6 +33,21 @@ const userService = {
     return userWithoutPassword;
   },
 
+  getByEmail: async (email) => {
+    const userId = await db.User.findOne({ where: { email } });
+    return userId;
+  },
+
+  getByName: async (name) => {
+    const sellerId = await db.User.findOne({ where: { name } });
+    return sellerId;
+  },
+
+  getAll: async () => {
+    const users = await db.User.findAll();
+    return users;
+  },
+
 };
 
 module.exports = userService;

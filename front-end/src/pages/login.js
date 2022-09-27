@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { saveInLocalStorage } from '../services/localStorage';
+import { readInLocalStorage, saveInLocalStorage } from '../services/localStorage';
 import requestApi from '../services/ApiService';
 
 const MIN_PASS_LENGTH = 6;
@@ -15,6 +15,15 @@ function Login() {
   const [messageError, setMessageError] = useState(false);
 
   useEffect(() => {
+    const verifyUser = () => {
+      const user = readInLocalStorage('user');
+      if (user) return navigate('/customer/products');
+    };
+    verifyUser();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     const validEmail = EMAIL_REGEX.test(email);
     const validPassword = password.length >= MIN_PASS_LENGTH;
     const buttonEnabled = validEmail && validPassword;
@@ -24,15 +33,13 @@ function Login() {
   async function handleLogin(e) {
     e.preventDefault();
 
-    console.log('teste');
-
     try {
       const data = await requestApi('localhost:3001/login', '', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
-      saveInLocalStorage('data', data);
+      saveInLocalStorage('user', data);
       let nav = '';
       if (data.role === 'customer') {
         nav = '/customer/products';

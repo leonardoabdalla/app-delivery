@@ -2,3 +2,5 @@ export const readInLocalStorage = (param) => JSON.parse(localStorage.getItem(par
 
 export const saveInLocalStorage = (param, value) => localStorage
   .setItem(param, JSON.stringify(value));
+
+export const removeInLocalStorage = (param) => localStorage.removeItem(param);

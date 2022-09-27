@@ -1,29 +1,42 @@
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
 
-const JWT_SECRET = 'secret_key'; // fs.readFileSync('../../jwt.evaluation.key', { encoding: 'utf-8' });
+const JWT_SECRET = fs.readFileSync('./jwt.evaluation.key', { encoding: 'utf-8' });
 
 const jwtService = {
-  createToken: (data) => {
-    const token = jwt.sign({ data }, JWT_SECRET);
+  createToken: (user) => {
+    const { password, ...userWOPassword } = user;
+    const token = jwt.sign(userWOPassword, JWT_SECRET);
     return token;
   },
 
-  validateToken: (req, _res, next) => {
+  decodeToken: (req, _res, next) => {
     const { authorization } = req.headers;
-    if (!authorization) {
-      const erro = new Error('Token not found');
+
+    try {
+      const user = jwt.verify(authorization, JWT_SECRET);
+      req.user = user;
+    } catch (error) {
+      req.user = {};
+    }
+
+    next();
+  },
+
+  // roles = ['customer', 'seller', 'administrator']
+  validateToken: (roles = []) => (req, _res, next) => {
+    if (!Object.keys(req.user).length) {
+      const erro = new Error('Expired or invalid token');
       erro.name = 'UnauthorizedError';
       throw erro;
     }
-    try {
-      const temp = jwt.verify(authorization, JWT_SECRET);
-      console.log(temp);
-      req.userId = temp.data.id;
-    } catch (e) {
-      const error = new Error('Expired or invalid token');
+
+    if (roles.length && !roles.includes(req.user.role)) {
+      const error = new Error(`Endpoint only available for roles: ${roles.join(', ')}`);
       error.name = 'UnauthorizedError';
       throw error; 
     }
+
     next();
   },
 };
