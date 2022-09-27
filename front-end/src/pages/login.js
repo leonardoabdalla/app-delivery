@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { saveInLocalStorage } from '../services/localStorage';
+import { readInLocalStorage, saveInLocalStorage } from '../services/localStorage';
 import requestApi from '../services/ApiService';
 
 const MIN_PASS_LENGTH = 6;
@@ -13,6 +13,15 @@ function Login() {
   const [password, setPassword] = useState('');
   const [disabled, setDisabled] = useState(true);
   const [messageError, setMessageError] = useState(false);
+
+  useEffect(() => {
+    const verifyUser = () => {
+      const user = readInLocalStorage('user');
+      if (user) return navigate('/customer/products');
+    };
+    verifyUser();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const validEmail = EMAIL_REGEX.test(email);
