@@ -84,6 +84,7 @@ function Checkout() {
                   <CartCard
                     index={ index }
                     products={ order }
+                    page="checkout"
                   />
                 </tr>
               ))
