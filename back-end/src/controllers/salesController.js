@@ -3,6 +3,7 @@ const userService = require('../services/userService');
 
 const salesController = {
   create: async (req, res) => {
+    console.log(req.body);
     const { userEmail, products } = req.body;
     const { id: userId } = await userService.getByEmail(userEmail);
     const { id: saleId } = await salesService

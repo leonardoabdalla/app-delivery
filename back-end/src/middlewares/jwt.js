@@ -12,13 +12,12 @@ const jwtService = {
 
   decodeToken: (req, _res, next) => {
     const { authorization } = req.headers;
-    req.user = {};
 
     try {
       const user = jwt.verify(authorization, JWT_SECRET);
       req.user = user;
     } catch (error) {
-      console.error(error);
+      req.user = {};
     }
 
     next();

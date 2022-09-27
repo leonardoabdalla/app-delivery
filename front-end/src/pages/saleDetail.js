@@ -8,7 +8,7 @@ import requestApi from '../services/ApiService';
 function SaleDetail() {
   const { id } = useParams();
   const [sale, setSale] = useState([]);
-  const [saller, setSeller] = useState();
+  const [seller, setSeller] = useState();
   const [date, setDate] = useState();
   const [status, setStatus] = useState('Pendente');
   const [totalPrice, setTotalPrice] = useState();
@@ -32,6 +32,8 @@ function SaleDetail() {
     'Valor Unitário', 'Sub-total',
   ];
 
+  const statusId = 'customer_order_details__element-order-details-label-delivery-status';
+
   return (
     <div>
       <ClientNav />
@@ -39,27 +41,40 @@ function SaleDetail() {
         Detalhes do Pedido
       </h1>
       <fieldset>
-        <div>
+        <div
+          data-testid="customer_order_details__element-order-details-label-order-id"
+        >
           PEDIDO
           {' '}
           { id }
         </div>
-        <div>
+        <div
+          data-testid="customer_order_details__element-order-details-label-seller-name"
+        >
           Vendedor
           {' '}
-          { saller }
+          { seller }
         </div>
-        <div>
+        <div
+          data-testid="customer_order_details__element-order-details-label-order-date"
+
+        >
           data
           {' '}
           { formatDate(date) }
         </div>
-        <div>
+        <div
+          data-testid={ statusId }
+        >
           status
           {' '}
           { status }
         </div>
-        <button type="button">
+        <button
+          type="button"
+          data-testid="customer_order_details__button-delivery-check"
+          disabled={ status !== 'Em Trânsito' }
+        >
           Marcar como entregue
         </button>
       </fieldset>
@@ -88,10 +103,14 @@ function SaleDetail() {
         </tbody>
       </table>
       <div>
-        Total Price
-        {' '}
-        R$
-        { totalPrice }
+        <span>
+          {'Total: R$ '}
+        </span>
+        <span
+          data-testid="customer_order_details__element-order-total-price"
+        >
+          { String(totalPrice).replace('.', ',') }
+        </span>
       </div>
     </div>
   );
