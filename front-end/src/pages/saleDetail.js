@@ -28,12 +28,18 @@ function SaleDetail({ user }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const updateStatus = async (newStatus) => {
+    await requestApi(`/sales/${id}`, 'PUT', JSON.stringify({ status: newStatus }));
+    setStatus(newStatus);
+  };
+
   const arr = [
     'Item', 'Descrição', 'Quantidade',
     'Valor Unitário', 'Sub-total',
   ];
 
-  const statusId = 'customer_order_details__element-order-details-label-delivery-status';
+  const statusId = `${user}_order_details__element-order-details-label-delivery-status`;
+  const sallerDT = `${user}_order_details__element-order-details-label-seller-name`;
 
   return (
     <div>
@@ -43,21 +49,23 @@ function SaleDetail({ user }) {
       </h1>
       <fieldset>
         <div
-          data-testid="customer_order_details__element-order-details-label-order-id"
+          data-testid={ `${user}_order_details__element-order-details-label-order-id` }
         >
           PEDIDO
           {' '}
           { id }
         </div>
+        { user === 'customer' && (
+          <div
+            data-testid={ sallerDT }
+          >
+            Vendedor
+            {' '}
+            { seller }
+          </div>
+        ) }
         <div
-          data-testid="customer_order_details__element-order-details-label-seller-name"
-        >
-          Vendedor
-          {' '}
-          { seller }
-        </div>
-        <div
-          data-testid="customer_order_details__element-order-details-label-order-date"
+          data-testid={ `${user}_order_details__element-order-details-label-order-date` }
 
         >
           data
@@ -71,13 +79,39 @@ function SaleDetail({ user }) {
           {' '}
           { status }
         </div>
-        <button
-          type="button"
-          data-testid="customer_order_details__button-delivery-check"
-          disabled={ status !== 'Em Trânsito' }
-        >
-          Marcar como entregue
-        </button>
+        {
+          user === 'customer'
+            ? (
+              <button
+                type="button"
+                data-testid={ `${user}_order_details__button-delivery-check` }
+                disabled={ status !== 'Em Trânsito' }
+                onClick={ () => updateStatus('Entregue') }
+              >
+                Marcar como entregue
+              </button>
+            )
+            : (
+              <>
+                <button
+                  type="button"
+                  data-testid="seller_order_details__button-preparing-check"
+                  disabled={ status !== 'Pendente' }
+                  onClick={ () => updateStatus('Preparando') }
+                >
+                  Preparar pedido
+                </button>
+                <button
+                  type="button"
+                  data-testid="seller_order_details__button-dispatch-check"
+                  disabled={ status !== 'Preparando' }
+                  onClick={ () => updateStatus('Em Trânsito') }
+                >
+                  Saiu para entrega
+                </button>
+              </>
+            )
+        }
       </fieldset>
       <table>
         <thead>
@@ -97,7 +131,7 @@ function SaleDetail({ user }) {
                   index={ index }
                   products={ order }
                   page="order_details"
-                  user="customer"
+                  user={ `${user}` }
                 />
               </tr>
             ))
@@ -109,7 +143,7 @@ function SaleDetail({ user }) {
           {'Total: R$ '}
         </span>
         <span
-          data-testid="customer_order_details__element-order-total-price"
+          data-testid={ `${user}_order_details__element-order-total-price` }
         >
           { String(totalPrice).replace('.', ',') }
         </span>

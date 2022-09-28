@@ -53,6 +53,12 @@ const salesService = {
 
     return sale;
   },
+
+  updateStatus: async (id, status) => {
+    const sale = await db.Sale.update({ status }, { where: { id } });
+
+    return sale;
+  },
 };
 
 module.exports = salesService;
