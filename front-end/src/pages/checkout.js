@@ -78,6 +78,7 @@ function Checkout() {
                     index={ index }
                     products={ order }
                     page="checkout"
+                    user="customer"
                   />
                 </tr>
               ))
