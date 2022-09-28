@@ -20,30 +20,40 @@ function OrderCard({ id, status, date, price, address, addressNumber, user }) {
       onClick={ () => navigate(`/${user}/orders/${id}`) }
       className="order-card__element-button"
     >
-      <section>
+      <section className="order-card__element-order-id">
         <span>Pedido </span>
         <span data-testid={ dataTestId.id }>{id}</span>
       </section>
-      <div>
-        <section data-testid={ dataTestId.status }>{status}</section>
-        <section className="order-card__element-date">
-          <span data-testid={ dataTestId.date }>
-            {formatDate(date).replace('.', ',')}
-          </span>
-          <span data-testid={ dataTestId.price }>
-            R$
-            {' '}
-            {price.replace('.', ',')}
-          </span>
-        </section>
-      </div>
-      {
-        user === 'seller' && (
-          <section data-testid={ dataTestId.address }>
-            { `${address}, ${addressNumber}` }
+      <div className="order-card__element-info">
+        <div>
+          <section
+            className={ `order-card__element-info-status ${status}` }
+            data-testid={ dataTestId.status }
+          >
+            {status}
           </section>
-        )
-      }
+          <section className="order-card__element-info-order">
+            <span data-testid={ dataTestId.date }>
+              {formatDate(date).replace('.', ',')}
+            </span>
+            <span data-testid={ dataTestId.price }>
+              R$
+              {' '}
+              {price.replace('.', ',')}
+            </span>
+          </section>
+        </div>
+        {
+          user === 'seller' && (
+            <section
+              className="order-card__element-info-address"
+              data-testid={ dataTestId.address }
+            >
+              { `${address}, ${addressNumber}` }
+            </section>
+          )
+        }
+      </div>
     </button>
   );
 }
