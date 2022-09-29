@@ -1,33 +1,49 @@
 const salesService = require('../services/salesService');
-const userService = require('../services/userService');
 
 const salesController = {
   create: async (req, res) => {
-    console.log(req.body);
-    const { userEmail, products } = req.body;
-    const { id: userId } = await userService.getByEmail(userEmail);
+    console.log(req.user);
+    const { id: userId } = req.user;
+    const { products, ...saleData } = req.body;
     const { id: saleId } = await salesService
-      .createSale({ ...req.body, userId });
+      .createSale({ ...saleData, userId });
     await salesService.createSalesProduct(products, saleId);
 
     res.status(201).json({ saleId });
   },
 
   list: async (req, res) => {
-    const sales = await salesService.list();
-    res.status(200).json(sales);
-  },
+    const { id, role } = req.user;
+    let sales;
 
-  getByUserEmail: async (req, res) => {
-    const { email } = req.body;
-    const { id } = await userService.getByEmail(email);
-    const sales = await salesService.getByUserId(id);
+    switch (role) {
+      case 'customer':
+        sales = await salesService.getByCustomer(id);
+        break;
+      case 'seller':
+        sales = await salesService.getBySeller(id);
+        break;
+      case 'administrator':
+        sales = await salesService.list();
+        break;
+      default:
+        break;
+    }
+
     res.status(200).json(sales);
   },
 
   getById: async (req, res) => {
     const { id } = req.params;
     const sale = await salesService.getById(id);
+
+    res.status(200).json(sale);
+  },
+
+  updateStatus: async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+    const sale = await salesService.updateStatus(id, status);
 
     res.status(200).json(sale);
   },

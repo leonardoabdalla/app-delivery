@@ -14,7 +14,7 @@ function Products() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await requestApi('localhost:3001/products', '');
+      const data = await requestApi('/products');
       setProducts(data);
     };
     fetchData();
@@ -26,7 +26,7 @@ function Products() {
 
   return (
     <div>
-      <ClientNav />
+      <ClientNav page="customer" />
       <div className="products-list">
         {
           productList.map((product, index) => (

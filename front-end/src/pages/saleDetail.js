@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 import CartCard from '../components/cartCard';
-import ClientNav from '../components/ClientNav';
 import formatDate from '../helpers/formatDate';
 import requestApi from '../services/ApiService';
+import ClientNav from '../components/ClientNav';
 
-function SaleDetail() {
+function SaleDetail({ user }) {
   const { id } = useParams();
   const [sale, setSale] = useState([]);
   const [seller, setSeller] = useState();
@@ -15,7 +16,7 @@ function SaleDetail() {
 
   useEffect(() => {
     const findSale = async () => {
-      const temp = await requestApi(`localhost:3001/sales/${id}`, '');
+      const temp = await requestApi(`/sales/${id}`);
       setTotalPrice(temp.totalPrice);
       setSale(temp.products);
       setSeller(temp.seller.name);
@@ -27,36 +28,44 @@ function SaleDetail() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const updateStatus = async (newStatus) => {
+    await requestApi(`/sales/${id}`, 'PUT', JSON.stringify({ status: newStatus }));
+    setStatus(newStatus);
+  };
+
   const arr = [
     'Item', 'Descrição', 'Quantidade',
     'Valor Unitário', 'Sub-total',
   ];
 
-  const statusId = 'customer_order_details__element-order-details-label-delivery-status';
+  const statusId = `${user}_order_details__element-order-details-label-delivery-status`;
+  const sallerDT = `${user}_order_details__element-order-details-label-seller-name`;
 
   return (
     <div>
-      <ClientNav />
+      <ClientNav page={ user } />
       <h1>
         Detalhes do Pedido
       </h1>
       <fieldset>
         <div
-          data-testid="customer_order_details__element-order-details-label-order-id"
+          data-testid={ `${user}_order_details__element-order-details-label-order-id` }
         >
           PEDIDO
           {' '}
           { id }
         </div>
+        { user === 'customer' && (
+          <div
+            data-testid={ sallerDT }
+          >
+            Vendedor
+            {' '}
+            { seller }
+          </div>
+        ) }
         <div
-          data-testid="customer_order_details__element-order-details-label-seller-name"
-        >
-          Vendedor
-          {' '}
-          { seller }
-        </div>
-        <div
-          data-testid="customer_order_details__element-order-details-label-order-date"
+          data-testid={ `${user}_order_details__element-order-details-label-order-date` }
 
         >
           data
@@ -70,13 +79,39 @@ function SaleDetail() {
           {' '}
           { status }
         </div>
-        <button
-          type="button"
-          data-testid="customer_order_details__button-delivery-check"
-          disabled={ status !== 'Em Trânsito' }
-        >
-          Marcar como entregue
-        </button>
+        {
+          user === 'customer'
+            ? (
+              <button
+                type="button"
+                data-testid={ `${user}_order_details__button-delivery-check` }
+                disabled={ status !== 'Em Trânsito' }
+                onClick={ () => updateStatus('Entregue') }
+              >
+                Marcar como entregue
+              </button>
+            )
+            : (
+              <>
+                <button
+                  type="button"
+                  data-testid="seller_order_details__button-preparing-check"
+                  disabled={ status !== 'Pendente' }
+                  onClick={ () => updateStatus('Preparando') }
+                >
+                  Preparar pedido
+                </button>
+                <button
+                  type="button"
+                  data-testid="seller_order_details__button-dispatch-check"
+                  disabled={ status !== 'Preparando' }
+                  onClick={ () => updateStatus('Em Trânsito') }
+                >
+                  Saiu para entrega
+                </button>
+              </>
+            )
+        }
       </fieldset>
       <table>
         <thead>
@@ -96,6 +131,7 @@ function SaleDetail() {
                   index={ index }
                   products={ order }
                   page="order_details"
+                  user={ `${user}` }
                 />
               </tr>
             ))
@@ -107,7 +143,7 @@ function SaleDetail() {
           {'Total: R$ '}
         </span>
         <span
-          data-testid="customer_order_details__element-order-total-price"
+          data-testid={ `${user}_order_details__element-order-total-price` }
         >
           { String(totalPrice).replace('.', ',') }
         </span>
@@ -115,5 +151,9 @@ function SaleDetail() {
     </div>
   );
 }
+
+SaleDetail.propTypes = {
+  user: PropTypes.string,
+}.isRequired;
 
 export default SaleDetail;

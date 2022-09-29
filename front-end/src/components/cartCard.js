@@ -2,17 +2,17 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import CartContext from '../context/CartContext';
 
-function CartCard({ index, products, page }) {
+function CartCard({ index, products, page, user }) {
   const { removeFromCart } = useContext(CartContext);
   const { name, price } = products;
   const qtt = page === 'checkout' ? products.quantity : products.SalesProduct.quantity;
 
   const dataTestId = {
-    itemNumber: `customer_${page}__element-order-table-item-number-${index}`,
-    tableName: `customer_${page}__element-order-table-name-${index}`,
-    tableQty: `customer_${page}__element-order-table-quantity-${index}`,
-    unitPrice: `customer_${page}__element-order-table-unit-price-${index}`,
-    subTotal: `customer_${page}__element-order-table-sub-total-${index}`,
+    itemNumber: `${user}_${page}__element-order-table-item-number-${index}`,
+    tableName: `${user}_${page}__element-order-table-name-${index}`,
+    tableQty: `${user}_${page}__element-order-table-quantity-${index}`,
+    unitPrice: `${user}_${page}__element-order-table-unit-price-${index}`,
+    subTotal: `${user}_${page}__element-order-table-sub-total-${index}`,
     btnRemove: `customer_checkout__element-order-table-remove-${index}`,
   };
 

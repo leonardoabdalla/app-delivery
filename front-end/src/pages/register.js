@@ -27,12 +27,12 @@ function Register() {
     e.preventDefault();
 
     try {
-      const data = await requestApi('localhost:3001/users', '', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password }),
-      });
-      saveInLocalStorage('data', data);
+      const data = await requestApi(
+        '/users',
+        'POST',
+        JSON.stringify({ name, email, password }),
+      );
+      saveInLocalStorage('user', data);
       navigate('/customer/products');
     } catch (error) {
       console.log(error);
